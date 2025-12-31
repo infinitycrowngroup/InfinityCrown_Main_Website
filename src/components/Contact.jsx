@@ -79,10 +79,10 @@ const Contact = () => {
 
             const templateParams = {
                 from_name: name,
-                from_email: email,
+                // Do NOT set the user's email as the From address. Use reply_to for Reply-To header.
+                reply_to: email,
                 subject,
                 message,
-                reply_to: email,
                 to_name: toName,
             };
             if (toEmail) templateParams.to_email = toEmail;

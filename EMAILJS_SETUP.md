@@ -52,19 +52,23 @@ The Contact page now includes EmailJS integration for sending user-submitted mes
 ### Step 3: Create Email Template
 1. Go to **"Email Templates"** in the dashboard
 2. Click **"Create New Template"**
-3. Configure the template with these template variables:
+3. IMPORTANT: Do NOT rely on the user's email as the SMTP From address — many providers will rewrite or reject it. Instead, use a verified sender (the service's default From) and include the user's address as `reply_to` so replies go to the user.
+
+4. Configure the template with these template variables (the contact form sends these exact names):
    ```
-   From: {{from_email}}
-   Name: {{from_name}}
-   Subject: {{subject}}
-   Message:
+   {{from_name}}
+   {{reply_to}}
+   {{subject}}
    {{message}}
    ```
-4. Example template structure:
+
+5. Example template structure (recommended):
    ```
    Hello,
 
-   You have received a new message from {{from_name}} ({{from_email}}).
+   You have received a new message from {{from_name}}.
+
+   Sender Email (Reply-To): {{reply_to}}
 
    Subject: {{subject}}
 
@@ -74,7 +78,10 @@ The Contact page now includes EmailJS integration for sending user-submitted mes
    ---
    Sent from: Infinity Crown Website
    ```
-5. Save the template and copy your **Template ID** (format: `template_xxxxx`)
+
+6. In the EmailJS template settings, set the **To Email** to your business inbox (for example: `infinitycrowngroup@gmail.com`). Do NOT set the template's From to the user's email — use the service's verified From and the `reply_to` variable for reply routing.
+
+7. Save the template and copy your **Template ID** (format: `template_xxxxx`)
 
 ### Step 4: Get Public Key
 1. Go to **"Account"** > **"API Keys"**
