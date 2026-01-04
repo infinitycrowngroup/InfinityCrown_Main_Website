@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Link, NavLink } from 'react-router-dom';
 
 const Navbar = () => {
@@ -23,6 +23,18 @@ const Navbar = () => {
         { name: 'Commitment', path: '/testimonials' },
         { name: 'Contact', path: '/contact' },
     ];
+
+    // Prevent background scrolling when mobile menu is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
 
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-deep-black/90 backdrop-blur-md shadow-lg border-b border-white/5' : 'bg-transparent'}`}>
@@ -67,19 +79,20 @@ const Navbar = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-deep-black/95 backdrop-blur-xl border-b border-white/10"
+                        initial={{ y: '-10%', opacity: 0 }}
+                        animate={{ y: '0%', opacity: 1 }}
+                        exit={{ y: '-10%', opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="md:hidden fixed inset-0 z-[60] w-full h-screen bg-gradient-to-b from-black via-royal-blue/80 to-black p-6"
                     >
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                        <div className="max-w-7xl mx-auto flex flex-col justify-center items-center h-full space-y-6">
                             {navLinks.map((link) => (
                                 <NavLink
                                     key={link.name}
                                     to={link.path}
                                     onClick={() => setIsOpen(false)}
                                     className={({ isActive }) =>
-                                        `block px-3 py-2 text-base font-medium transition-colors ${isActive
+                                        `block px-6 py-3 text-2xl font-semibold transition-colors ${isActive
                                             ? 'text-gold'
                                             : 'text-gray-300 hover:text-gold'
                                         }`
